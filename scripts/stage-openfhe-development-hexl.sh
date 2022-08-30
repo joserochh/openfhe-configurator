@@ -9,7 +9,7 @@ $ROOT/scripts/stage-openfhe-development.sh || abort "Unable to stage openfhe-dev
 
 if [ ! -d $ROOT/repos/openfhe-hexl ]; then
   cd $ROOT/repos || abort "Unable to enter the repos directory."
-  git clone https://github.com/openfheorg/openfhe-hexl.git || abort "Unable to clone the openfhe-hexl repository."
+  git clone https://github.com/joserochh/openfhe-hexl.git || abort "Unable to clone the openfhe-hexl repository."
 fi
 
 separator
@@ -24,10 +24,19 @@ echo "Status of branch openfhe-hexl $OPENFHE_HEXL_BRANCH."
 echo
 git status
 
-scripts/stage-openfhe-development-hexl.sh || abort "Unable to stage openfhe-hexl into openfhe-development."
+LOCAL_HEXL_PREBUILT=$LOCAL_HEXL_PREBUILT scripts/stage-openfhe-development-hexl.sh || abort "Unable to stage openfhe-hexl into openfhe-development."
 
 separator
-echo "Build [hexl-enabled] is staged."
-echo "You may now run scripts/build-openfhe-development-hexl.sh to perform a hexl-enabled build."
-echo
-
+if [ "x$LOCAL_HEXL_PREBUILT" = "x" ]; then
+  echo "Build [hexl-enabled] is staged."
+  echo "You may now run scripts/build-openfhe-development-hexl.sh to perform a hexl-enabled build."
+  echo
+else
+  echo "Build [hexl-enabled] is staged."
+  echo "You may now run:"
+  echo 
+  echo "   \"INTEL_HEXL_HINT_DIR=$INTEL_HEXL_HINT_DIR scripts/build-openfhe-development-local-hexl-prebuilt.sh\""
+  echo 
+  echo "to perform a hexl-enabled build."
+  echo
+fi
